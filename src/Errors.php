@@ -10,9 +10,9 @@ class Errors
     /**
      * @codeCoverageIgnore
      */
-    public static function attachExceptionHandler()
+    public static function attachExceptionHandler(): void
     {
-        set_exception_handler(function (\Exception $exception) {
+        set_exception_handler(function (\Throwable $exception) {
             http_response_code(550);
             if (error_reporting() === E_ALL) {
                 throw $exception;
