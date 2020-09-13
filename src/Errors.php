@@ -25,7 +25,7 @@ class Errors
                 'line' => $exception->getLine(),
                 'file' => $exception->getFile(),
             ]));
-            Response::flush(Response::jsonError($exception->getMessage()));
+            Response::flush(Response::jsonError($exception->getMessage(), 'uncaught-exception'));
             exit;
         });
     }
@@ -35,15 +35,15 @@ class Errors
      *
      * @param bool $condition Ошибка или нет
      * @param string $error Сообщение
+     * @param string $hint Подсказка
      *
      * @codeCoverageIgnore
      */
-    public static function conditionExit(bool $condition, string $error): void
+    public static function conditionExit(bool $condition, string $error, string $hint = ''): void
     {
         if ($condition) {
-            Response::flush(Response::jsonError($error));
+            Response::flush(Response::jsonError($error, $hint));
             exit;
         }
     }
 }
-
