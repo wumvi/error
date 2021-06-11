@@ -8,23 +8,29 @@ use Wumvi\Utils\Response;
 class Errors
 {
     /**
+     * @param array $custom
+     *
      * @codeCoverageIgnore
+     *
+     * @throws
      */
-    public static function attachExceptionHandler(): void
+    public static function attachExceptionHandler(array $custom = []): void
     {
-        set_exception_handler(function (\Throwable $exception) {
+        set_exception_handler(static function (\Throwable $exception) use ($custom) {
             http_response_code(550);
             if (error_reporting() === E_ALL) {
                 throw $exception;
             }
-            error_log(json_encode([
+            $json = json_encode([
                 'msg' => $exception->getMessage(),
                 'query' => $_SERVER['QUERY_STRING'],
                 'method' => $_SERVER['REQUEST_METHOD'],
                 'trace' => $exception->getTrace(),
                 'line' => $exception->getLine(),
                 'file' => $exception->getFile(),
-            ]));
+                'custom' => $custom,
+            ], JSON_THROW_ON_ERROR);
+            error_log($json);
             Response::flush(Response::jsonError($exception->getMessage(), 'uncaught-exception'));
             exit;
         });
@@ -45,5 +51,10 @@ class Errors
             Response::flush(Response::jsonError($error, $hint));
             exit;
         }
+    }
+
+    public static function conditionErrorResponse($result, string $error, string $hint = ''): void
+    {
+        self::conditionExit($result instanceof ErrorResponse, $error, $hint);
     }
 }
