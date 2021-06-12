@@ -17,17 +17,9 @@
     "wumvi/utils.response": "v1.0.7"
   },
   "require-dev": {
-    "phpunit/phpunit": "9.5.5",
-    "overtrue/phplint": "8.0.x-dev",
-    "phan/phan": "4.0.6"
+    "phpunit/phpunit": "9.5.5"
   },
   "scripts": {
-    "phpstan": [
-      "phpstan analyze --level=7 src -c phpstan.neon"
-    ],
-    "phplint": [
-      "phplint"
-    ],
     "phpunit": [
       "phpunit"
     ],
@@ -35,8 +27,6 @@
       "phpcs src --parallel=10 --runtime-set php_version 74000 -p --standard=ruleset.xml"
     ],
     "test": [
-      "@phpstan",
-      "@phplint",
       "@phpunit",
       "@phpcs"
     ]
