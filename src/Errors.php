@@ -18,10 +18,6 @@ class Errors
     {
         set_exception_handler(
             static function (\Throwable $exception) use ($custom) {
-                http_response_code(550);
-                if (error_reporting() === E_ALL) {
-                    throw $exception;
-                }
                 $json = json_encode([
                     'msg' => $exception->getMessage(),
                     'query' => $_SERVER['QUERY_STRING'],
@@ -32,6 +28,10 @@ class Errors
                     'custom' => $custom,
                 ], JSON_THROW_ON_ERROR);
                 error_log($json);
+                http_response_code(550);
+                if (error_reporting() === E_ALL) {
+                    throw $exception;
+                }
                 Response::flush(Response::jsonError($exception->getMessage(), 'uncaught-exception'));
                 exit;
             }
