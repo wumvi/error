@@ -53,8 +53,10 @@ class Errors
         }
     }
 
-    public static function conditionErrorResponse($result, string $error, string $hint = ''): void
+    public static function conditionErrorResponse($result): void
     {
-        self::conditionExit($result instanceof ErrorResponse, $error, $hint);
+        if ($result instanceof ErrorResponse) {
+            self::conditionExit(true, $result->getName(), $result->getHint());
+        }
     }
 }
