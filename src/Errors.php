@@ -9,22 +9,32 @@ class Errors
 {
     /**
      * @param array $custom
+     * @param bool $isEnvLog
      *
      * @codeCoverageIgnore
      *
      * @throws
      */
-    public static function attachExceptionHandler(array $custom = []): void
+    public static function attachExceptionHandler(array $custom = [], bool $isEnvLog = true): void
     {
         set_exception_handler(
-            static function (\Throwable $exception) use ($custom) {
+            static function (\Throwable $exception) use ($custom, $isEnvLog) {
                 $json = json_encode([
                     'msg' => $exception->getMessage(),
-                    'query' => $_SERVER['QUERY_STRING'],
+                    'url' => $_SERVER['REQUEST_URI'],
+                    'host' => $_SERVER['HTTP_HOST'],
+                    'protocol' => $_SERVER['SERVER_PROTOCOL'],
                     'method' => $_SERVER['REQUEST_METHOD'],
+                    'port' => $_SERVER['SERVER_PORT'],
                     'trace' => $exception->getTrace(),
                     'line' => $exception->getLine(),
                     'file' => $exception->getFile(),
+                    'time' => $_SERVER['REQUEST_TIME'],
+                    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'no-user-agent',
+                    'hostname' => gethostname(),
+                    'image_version' => $_ENV['IMAGE_VERSION'] ?? 'no-image-version',
+                    'container_id' => $_ENV['CONTAINER_ID'] ?? 'no-container-id',
+                    'env' => $isEnvLog ? $_ENV : [],
                     'custom' => $custom,
                 ], JSON_THROW_ON_ERROR);
                 error_log($json);
