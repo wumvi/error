@@ -2,13 +2,13 @@
   "name": "wumvi/errors",
   "authors": [
     {
-      "name": "VladKopalov",
-      "email": "vladkop@mail.ru"
+      "name": "Private Person",
+      "email": "privateperson@wumvi.ru"
     }
   ],
   "autoload": {
     "psr-4": {
-      "Wumvi\\Errors\\": "src"
+      "Wumvi\\Errors\\": "src/Wumvi/Errors/"
     }
   },
   "require": {

@@ -7,6 +7,10 @@ use Wumvi\Utils\Response;
 
 class Errors
 {
+    public const HTTP_CODE_5XX_EXCEPTION_HANDLER = 550;
+    public const HTTP_CODE_5XX_COMMON_INTERNAL_ERROR = 551;
+    public const HTTP_CODE_5XX_ERROR_RESPONSE = 552;
+
     /**
      * @param array $custom
      * @param bool $isEnvLog
@@ -15,8 +19,10 @@ class Errors
      *
      * @throws
      */
-    public static function attachExceptionHandler(array $custom = [], bool $isEnvLog = true): void
-    {
+    public static function attachExceptionHandler(
+        array $custom = [],
+        bool $isEnvLog = true
+    ): void {
         set_exception_handler(
             static function (\Throwable $exception) use ($custom, $isEnvLog) {
                 $json = json_encode([
@@ -38,7 +44,7 @@ class Errors
                     'custom' => $custom,
                 ], JSON_THROW_ON_ERROR);
                 error_log($json);
-                http_response_code(550);
+                http_response_code(self::HTTP_CODE_5XX_EXCEPTION_HANDLER);
                 if (error_reporting() === E_ALL) {
                     throw $exception;
                 }
@@ -51,24 +57,36 @@ class Errors
     /**
      * Завершает программу со ШТАТНОЙ ошибкой.
      *
-     * @param bool $condition Ошибка
-     *                          или нет
+     * @param bool $isError Ошибка или нет
      * @param string $error Сообщение
      * @param string $hint Подсказка
+     * @param int $httpStatus Http status
      *
      * @codeCoverageIgnore
      */
-    public static function conditionExit(bool $condition, string $error, string $hint = ''): void
-    {
-        if ($condition) {
+    public static function conditionExit(
+        bool $isError,
+        string $error,
+        string $hint = '',
+        int $httpStatus = self::HTTP_CODE_5XX_COMMON_INTERNAL_ERROR
+    ): void {
+        if ($isError) {
+            http_response_code($httpStatus);
             Response::flush(Response::jsonError($error, $hint));
             exit;
         }
     }
 
-    public static function conditionErrorResponse($result): void
-    {
+    /**
+     * @param * $result Data
+     * @param int $httpStatus Http status
+     */
+    public static function conditionErrorResponse(
+        $result,
+        int $httpStatus = self::HTTP_CODE_5XX_ERROR_RESPONSE
+    ): void {
         if ($result instanceof ErrorResponse) {
+            http_response_code($httpStatus);
             self::conditionExit(true, $result->getName(), $result->getHint());
         }
     }
