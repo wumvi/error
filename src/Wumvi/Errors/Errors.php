@@ -25,11 +25,11 @@ class Errors
             static function (\Throwable $exception) use ($custom, $isEnvLog) {
                 $json = json_encode([
                     'msg' => $exception->getMessage(),
-                    'url' => $_SERVER['REQUEST_URI'],
-                    'host' => $_SERVER['HTTP_HOST'],
-                    'protocol' => $_SERVER['SERVER_PROTOCOL'],
-                    'method' => $_SERVER['REQUEST_METHOD'],
-                    'port' => $_SERVER['SERVER_PORT'],
+                    'url' => $_SERVER['REQUEST_URI'] ?? 'no-uri',
+                    'host' => $_SERVER['HTTP_HOST'] ?? 'no-host',
+                    'protocol' => $_SERVER['SERVER_PROTOCOL'] ?? 'https',
+                    'method' => $_SERVER['REQUEST_METHOD'] ?? 'GET',
+                    'port' => $_SERVER['SERVER_PORT'] ?? '0',
                     'trace' => $exception->getTrace(),
                     'line' => $exception->getLine(),
                     'file' => $exception->getFile(),
