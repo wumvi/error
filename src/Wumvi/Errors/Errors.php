@@ -15,8 +15,6 @@ class Errors
      * @param array $custom
      * @param bool $isEnvLog
      *
-     * @codeCoverageIgnore
-     *
      * @throws
      */
     public static function attachExceptionHandler(
@@ -87,7 +85,7 @@ class Errors
     ): void {
         if ($result instanceof ErrorResponse) {
             http_response_code($httpStatus);
-            self::conditionExit(true, $result->getName(), $result->getHint());
+            self::conditionExit(true, $result->name, $result->hint);
         }
     }
 }

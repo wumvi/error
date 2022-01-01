@@ -1,0 +1,1 @@
+docker run --rm -ti -v $(pwd)/:/code/ --workdir /code/ dfuhbu/php8-cli-dev:0.1.5 bash

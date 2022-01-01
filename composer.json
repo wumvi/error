@@ -1,23 +1,17 @@
 {
   "name": "wumvi/errors",
-  "authors": [
-    {
-      "name": "Private Person",
-      "email": "privateperson@wumvi.ru"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "Wumvi\\Errors\\": "src/Wumvi/Errors/"
     }
   },
   "require": {
-    "php": "^8.0",
+    "php": "^8.1",
     "ext-json": "*",
-    "wumvi/utils.response": "v1.0.7"
+    "wumvi/utils.response": "v1.0.10"
   },
   "require-dev": {
-    "phpunit/phpunit": "9.5.5"
+    "phpunit/phpunit": "9.5.11"
   },
   "scripts": {
     "phpunit": [

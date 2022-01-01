@@ -6,18 +6,8 @@ namespace Wumvi\Errors;
 class ErrorResponse
 {
     public function __construct(
-        protected string $name,
-        protected string $hint = ''
+        public readonly string $name,
+        public readonly string $hint = ''
     ) {
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getHint(): string
-    {
-        return $this->hint;
     }
 }
